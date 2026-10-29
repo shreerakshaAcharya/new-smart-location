@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Space Organizer - Find it. Store it. Organize it.</title>
+  <meta name="description"
+    content="A personal home organization assistant that remembers where your belongings are kept and helps you organize every space in your house.">
+
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+  <!-- Ambient decorative glow orbs -->
+  <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
+
+  <div class="app-container">
+
+    <!-- Main Canvas Card -->
+    <main class="main-canvas">
+
+      <!-- Top Header Navigation Bar -->
+      <header class="canvas-header">
+        <div class="brand-wrapper" id="brandHeaderHome" role="button" tabindex="0" title="Go to Home">
+          <span class="brand-badge">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-600);">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            Smart Space Organizer
+          </span>
+        </div>
+
+        <div class="header-actions">
+          <!-- Find Item Button in Header -->
+          <button type="button" class="btn-header-nav" id="btnHeaderFind" title="Find My Item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>Find Item</span>
+          </button>
+
+          <!-- Stored Items Button in Header -->
+          <button type="button" class="btn-header-nav" id="btnHeaderItems" title="View Stored Belongings">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M7 8h10M7 12h10M7 16h6" />
+            </svg>
+            <span>My Items</span>
+          </button>
+
+          <!-- User / Auth Header Wrapper -->
+          <div class="auth-header-wrapper" id="authHeaderWrapper">
+            <button type="button" class="btn-header-login" id="btnLoginHeader">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+              <span id="loginBtnLabel">Login / Register</span>
+            </button>
+
+            <div class="user-logged-in-pill" id="userLoggedInPill" style="display: none;">
+              <span class="user-name-tag" id="currentUsernameDisplay">alex</span>
+              <button type="button" class="btn-logout" id="btnLogoutHeader" title="Sign Out">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                </svg>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ==========================================================================
+           PAGE 1: LANDING / WELCOME PAGE (NO STAT CARDS, WITH FIND ITEM)
+           ========================================================================== -->
+      <section class="view-container active-view" id="viewLanding">
+        <div class="landing-content">
+
+          <div class="hero-split-grid">
+
+            <!-- Left Hero Content -->
+            <div class="hero-text-block">
+              <div class="hero-pill-badge">
+                <span>Personal Home Organizer</span>
+              </div>
+
+              <h1 class="hero-title">
+                Smart Space <span class="title-gradient">Organizer</span>
+              </h1>
+
+              <div class="hero-tagline">
+                Find it. Store it. Organize it.
+              </div>
+
+              <p class="hero-description">
+                A simple, intuitive organizer that remembers where every item is stored and helps you maintain clean, organized living spaces.
+              </p>
+
+              <!-- Hero Actions: + Store Item & Find Item -->
+              <div class="hero-action-buttons">
+                <button type="button" class="btn-create-primary" id="btnCreateItem">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  <span>+ Store an Item</span>
+                </button>
+
+                <button type="button" class="btn-hero-find" id="btnLandingFindItem">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <span>Find My Item</span>
+                </button>
+              </div>
+
+              <div class="hero-quick-link">
+                <button type="button" class="link-btn-text" id="btnLandingViewItems">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <path d="M7 8h10M7 12h10M7 16h6" />
+                  </svg>
+                  <span>View All Stored Items</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Hero Cozy Room Visual -->
+            <div class="hero-image-card">
+              <img src="/assets/hero-room.jpg" alt="Cozy organized modern bedroom and study desk" id="heroRoomImage">
+              <div class="hero-image-overlay"></div>
+              <div class="hero-floating-badge">
+                <span class="live-dot"></span>
+                <span>Home Database Connected</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           PAGE 2: "WHERE DID YOU KEEP IT?" / STORE AN ITEM
+           ========================================================================== -->
+      <section class="view-container" id="viewStoreItem">
+        <div class="store-content">
+
+          <!-- Back navigation & Page Title -->
+          <div class="page-header-block">
+            <button type="button" class="back-to-home-btn" id="btnBackToHome">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span>Back to Home</span>
+            </button>
+            <h2 class="page-title">Add a New Item</h2>
+            <p class="page-subtitle">Tell us what you want to store and where.</p>
+          </div>
+
+          <!-- Mode Toggle: Type Item vs Upload Image -->
+          <div class="mode-toggle-group">
+            <button type="button" class="mode-tab-btn active" id="tabTypeItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+              <span>Type Item</span>
+            </button>
+
+            <button type="button" class="mode-tab-btn" id="tabUploadImage">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <circle cx="9" cy="9" r="2" />
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              </svg>
+              <span>Upload Image</span>
+            </button>
+          </div>
+
+          <!-- Search / Item Name Input Area -->
+          <div class="input-section" id="sectionItemName">
+            <div class="search-input-wrapper">
+              <span class="search-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+              <input type="text" id="itemSearchInput" class="item-search-input"
+                placeholder="e.g. charger, watch, passport, keys..." autocomplete="off">
+              <button type="button" class="clear-input-btn" id="btnClearInput" title="Clear text">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Quick Suggestion Chips -->
+            <div class="suggestion-chips-row">
+              <span class="suggestion-label">Quick Suggestions:</span>
+              <button type="button" class="item-chip" data-item="MacBook Charger">⚡ MacBook Charger</button>
+              <button type="button" class="item-chip" data-item="Smart Watch">⌚ Smart Watch</button>
+              <button type="button" class="item-chip" data-item="Passport">🛂 Passport</button>
+              <button type="button" class="item-chip" data-item="House Keys">🔑 House Keys</button>
+              <button type="button" class="item-chip" data-item="AirPods">🎧 AirPods</button>
+            </div>
+          </div>
+
+          <!-- Image Upload Area (Optional Item Image) -->
+          <div class="upload-dropzone" id="uploadDropzone">
+            <input type="file" id="fileInput" class="file-input-hidden" accept="image/*">
+
+            <div class="upload-default-content" id="uploadDefaultContent">
+              <div class="upload-icon-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3" />
+                </svg>
+              </div>
+              <div class="upload-primary-text">Upload item photo</div>
+              <div class="upload-secondary-text">(Optional photo - if uploaded, we will save it with this item)</div>
+            </div>
+
+            <!-- Upload Preview State -->
+            <div class="upload-preview-container" id="uploadPreviewContainer">
+              <img src="" alt="Item preview" id="previewImage" class="preview-thumb">
+              <div class="preview-meta">
+                <div class="preview-filename" id="previewFilename">photo.jpg</div>
+                <div class="preview-ai-badge">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Photo attached</span>
+                </div>
+              </div>
+              <button type="button" class="preview-remove-btn" id="btnRemoveImage" title="Remove image">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Location Cards Section ("Where did you keep it?") -->
+          <div class="location-section">
+            <div class="section-title-row">
+              <span class="section-label">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#7C3AED" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Where did you keep it?
+              </span>
+              <span class="section-sublabel">Select location</span>
+            </div>
+
+            <!-- 8 Practical Location Cards -->
+            <div class="location-cards-grid" id="locationCardsGrid">
+
+              <!-- 1. Wardrobe -->
+              <div class="location-card" data-location="Wardrobe">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M12 2a3 3 0 0 0-3 3c0 1.25.75 2.25 1.5 2.75L2 14.5A2 2 0 0 0 3.5 17h17a2 2 0 0 0 1.5-2.5L13.5 7.75C14.25 7.25 15 6.25 15 5a3 3 0 0 0-3-3z" />
+                  </svg>
+                </div>
+                <div class="location-name">Wardrobe</div>
+                <div class="location-desc">Hangers & Upper Shelves</div>
+              </div>
+
+              <!-- 2. Bedroom -->
+              <div class="location-card" data-location="Bedroom">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M2 4v16" />
+                    <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                    <path d="M2 17h20" />
+                    <path d="M6 8v9" />
+                  </svg>
+                </div>
+                <div class="location-name">Bedroom</div>
+                <div class="location-desc">Bedside & Nightstand</div>
+              </div>
+
+              <!-- 3. Kitchen -->
+              <div class="location-card" data-location="Kitchen">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                    <line x1="6" y1="1" x2="6" y2="4" />
+                    <line x1="10" y1="1" x2="10" y2="4" />
+                    <line x1="14" y1="1" x2="14" y2="4" />
+                  </svg>
+                </div>
+                <div class="location-name">Kitchen</div>
+                <div class="location-desc">Cabinets & Countertops</div>
+              </div>
+
+              <!-- 4. Dressing Table -->
+              <div class="location-card" data-location="Dressing Table">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="9" r="6" />
+                    <path d="M12 15v7" />
+                    <path d="M8 22h8" />
+                    <circle cx="12" cy="9" r="2" />
+                  </svg>
+                </div>
+                <div class="location-name">Dressing Table</div>
+                <div class="location-desc">Vanity Mirror & Organizers</div>
+              </div>
+
+              <!-- 5. Drawer -->
+              <div class="location-card" data-location="Drawer">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect width="20" height="8" x="2" y="3" rx="2" />
+                    <rect width="20" height="8" x="2" y="13" rx="2" />
+                    <line x1="10" y1="7" x2="14" y2="7" />
+                    <line x1="10" y1="17" x2="14" y2="17" />
+                  </svg>
+                </div>
+                <div class="location-name">Drawer</div>
+                <div class="location-desc">Pullout Shelves & Trays</div>
+              </div>
+
+              <!-- 6. Study Desk -->
+              <div class="location-card" data-location="Study Desk">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect width="16" height="10" x="4" y="3" rx="2" />
+                    <line x1="12" y1="13" x2="12" y2="17" />
+                    <line x1="4" y1="21" x2="20" y2="21" />
+                    <line x1="8" y1="17" x2="16" y2="17" />
+                  </svg>
+                </div>
+                <div class="location-name">Study Desk</div>
+                <div class="location-desc">Workstation & Monitor Rack</div>
+              </div>
+
+              <!-- 7. Storage Box -->
+              <div class="location-card" data-location="Storage Box">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                    <path d="m3.3 7 8.7 5 8.7-5" />
+                  </svg>
+                </div>
+                <div class="location-name">Storage Box</div>
+                <div class="location-desc">Bins, Totes & Containers</div>
+              </div>
+
+              <!-- 8. Other -->
+              <div class="location-card" data-location="Other" id="cardLocationOther">
+                <div class="card-check-badge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="location-icon-bubble">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                </div>
+                <div class="location-name">Other</div>
+                <div class="location-desc">Custom Spot or Room</div>
+              </div>
+
+            </div>
+
+            <!-- Optional custom room input if Other is selected -->
+            <div class="custom-detail-row" id="customDetailRow">
+              <input type="text" id="customLocationInput" class="custom-input"
+                placeholder="Specific room name (e.g. Living Room, Garage, Balcony)...">
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="store-actions-row">
+            <button type="button" class="btn-secondary" id="btnCancelStore">Cancel</button>
+            <button type="button" class="btn-next-action" id="btnNextAction">
+              <span>Next</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           PAGE 3: SUB-LOCATION SELECTION
+           ========================================================================== -->
+      <section class="view-container" id="viewSubLocation">
+        <div class="sublocation-content">
+
+          <!-- Header & Back Navigation -->
+          <div class="page-header-block">
+            <button type="button" class="back-to-home-btn" id="btnBackToStore">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span>Back</span>
+            </button>
+            <h2 class="page-title" id="subLocationTitle">Which spot?</h2>
+            <p class="page-subtitle" id="subLocationSubtitle">Select the specific spot where you kept it.</p>
+          </div>
+
+          <!-- Sub-location Options List -->
+          <div class="sublocation-options-list" id="subLocationOptionsList">
+            <!-- Rendered dynamically by app.js based on selected location -->
+          </div>
+
+          <!-- Add a custom location (optional) -->
+          <div class="custom-location-section">
+            <label class="custom-location-label" for="customSubLocationInput">Add a custom spot name (optional)</label>
+            <input type="text" id="customSubLocationInput" class="sublocation-custom-input"
+              placeholder="e.g. Second drawer below the mirror" autocomplete="off">
+          </div>
+
+          <!-- Bottom Action Row: Next -> -->
+          <div class="sublocation-actions-row">
+            <button type="button" class="btn-subloc-next" id="btnNextToSaveLocation">
+              <span>Next</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           PAGE 4: SPECIFY EXACT LOCATION MANUALLY (NO LOCATION PHOTO)
+           ========================================================================== -->
+      <section class="view-container" id="viewSaveLocation">
+        <div class="save-location-content">
+
+          <!-- Header & Back Navigation -->
+          <div class="page-header-block">
+            <button type="button" class="back-to-home-btn" id="btnBackToSubLocation">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span>Back</span>
+            </button>
+            <h2 class="page-title">Specify Exact Location</h2>
+            <p class="page-subtitle">Enter the specific spot manually so you know exactly where to find it.</p>
+          </div>
+
+          <!-- Summary Pill of Selected Room & Sub-Location -->
+          <div class="selected-location-summary">
+            <div class="selected-loc-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div class="selected-loc-text">
+              <span class="selected-loc-sub">Selected Area</span>
+              <span class="selected-loc-val" id="saveLocationSummaryPath">—</span>
+            </div>
+          </div>
+
+          <!-- Manual Specific Location Input -->
+          <div class="custom-location-section">
+            <label class="custom-location-label" for="manualSpecificLocationInput">Specific Spot Details</label>
+            <input type="text" id="manualSpecificLocationInput" class="sublocation-custom-input"
+              placeholder="e.g. Top drawer, left corner behind notebook, 2nd shelf on the right..." autocomplete="off">
+          </div>
+
+          <!-- Optional Additional Notes Input -->
+          <div class="custom-note-section">
+            <label class="custom-note-label" for="manualLocationNotesInput">Additional Note (optional)</label>
+            <input type="text" id="manualLocationNotesInput" class="sublocation-custom-input"
+              placeholder="e.g. Inside blue velvet pouch, with cables..." autocomplete="off">
+          </div>
+
+          <!-- Bottom Action Row: Save Location Button -->
+          <div class="save-location-action-row">
+            <button type="button" class="btn-save-location-primary" id="btnSaveFinalLocation">
+              <span>Save Location</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           PAGE 5: SAVED ITEM CONFIRMATION (ONLY SHOW REAL IMAGE IF USER GAVE ONE,
+           WITH FIND MY ITEM OPTION, NO DECORATE SPACE)
+           ========================================================================== -->
+      <section class="view-container" id="viewLocationResult">
+        <div class="result-content">
+
+          <!-- Clean Step Badge -->
+          <div class="step-indicator-tag">
+            <span>✓ Location Saved</span>
+          </div>
+
+          <!-- Success Celebration -->
+          <div class="result-celebration-head">
+            <div class="success-check-badge">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <h2 class="result-title">Saved to Your Space!</h2>
+            <p class="result-subtitle">We've saved the location of this item so you can find it anytime.</p>
+          </div>
+
+          <!-- Saved Item Card (Shows REAL photo ONLY if user uploaded one, otherwise clean icon!) -->
+          <div class="result-item-card">
+            <!-- Thumbnail Box: Only displayed if user gave an image -->
+            <div class="result-item-thumb-box" id="resultItemThumbBox" style="display: none;">
+              <img src="" alt="Item photo" id="resultItemThumb" class="result-thumb-img">
+            </div>
+
+            <!-- Fallback Clean Icon: Displayed if NO image was uploaded -->
+            <div class="result-item-icon-box" id="resultItemIconBox">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M7 8h10M7 12h10M7 16h6" />
+              </svg>
+            </div>
+
+            <div class="result-item-info">
+              <span class="result-item-label">Saved Item</span>
+              <h3 class="result-item-name" id="resultItemName">Item Name</h3>
+            </div>
+          </div>
+
+          <!-- Location Path Breadcrumbs Section -->
+          <div class="result-path-section">
+            <h4 class="result-section-label">Location Path</h4>
+            <div class="result-breadcrumbs" id="resultBreadcrumbs">
+              <span class="path-pill">Home</span>
+              <span class="path-arrow">→</span>
+              <span class="path-pill" id="pathPillLocation">Bedroom</span>
+              <span class="path-arrow">→</span>
+              <span class="path-pill" id="pathPillSubLocation">Study Desk</span>
+              <span class="path-arrow">→</span>
+              <span class="path-pill" id="pathPillDrawer">Drawer</span>
+            </div>
+          </div>
+
+          <!-- Current Location Highlight Card -->
+          <div class="current-location-card">
+            <div class="current-loc-icon-bubble">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div class="current-loc-text">
+              <span class="current-loc-title">Stored At</span>
+              <div class="current-loc-hierarchy" id="resultCurrentLocHierarchy">
+                —
+              </div>
+            </div>
+          </div>
+
+          <!-- Date Timestamp -->
+          <div class="result-saved-date">
+            <span>Saved on:</span> <strong id="resultSavedDate">Today</strong>
+          </div>
+
+          <!-- Bottom Action Buttons Row: + Add Another Item & Find My Item -->
+          <div class="result-actions-row">
+            <button type="button" class="btn-result-primary" id="btnAddAnotherItem">
+              <span>+ Add Another Item</span>
+            </button>
+            <button type="button" class="btn-hero-find" id="btnFindAnotherItem">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <span>Find My Item</span>
+            </button>
+          </div>
+
+          <!-- Back to Home link -->
+          <div class="result-find-link-row">
+            <button type="button" class="link-btn-text" id="btnHomeFromResult">
+              <span>← Back to Home</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           PAGE 6: "FIND MY ITEM" NATURAL SEARCH (CLEAN, NO REDUNDANT SEARCH RESULTS)
+           ========================================================================== -->
+      <section class="view-container" id="viewFindItem">
+        <div class="find-content">
+
+          <!-- Header & Back Navigation + Add Item Button -->
+          <div class="find-header-row">
+            <div class="find-header-left">
+              <button type="button" class="back-to-home-btn" id="btnBackFromFind">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <span>Back</span>
+              </button>
+              <div>
+                <h2 class="page-title">Find My Item</h2>
+                <p class="page-subtitle">Search where your items are stored in your home.</p>
+              </div>
+            </div>
+
+            <button type="button" class="btn-create-pill-sm" id="btnAddNewFromFind">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>+ Add Item</span>
+            </button>
+          </div>
+
+          <!-- Large Natural Search Bar -->
+          <div class="find-search-container">
+            <div class="find-search-box">
+              <span class="find-search-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </span>
+              <input type="text" id="findItemInput" class="find-search-input"
+                placeholder="Where is my item? (e.g. charger, keys, passport...)" autocomplete="off">
+              <button type="button" class="clear-input-btn" id="btnClearFindInput" title="Clear search">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Suggestion / Quick Search Chips -->
+            <div class="find-chips-row">
+              <span class="find-chips-label">Suggestions:</span>
+              <button type="button" class="find-chip" data-search="charger">⚡ charger</button>
+              <button type="button" class="find-chip" data-search="watch">⌚ watch</button>
+              <button type="button" class="find-chip" data-search="passport">🛂 passport</button>
+              <button type="button" class="find-chip" data-search="keys">🔑 keys</button>
+              <button type="button" class="find-chip" data-search="earphones">🎧 earphones</button>
+            </div>
+          </div>
+
+          <!-- Top Match Card (shown when there's a search query with results) -->
+          <div class="find-top-match-wrapper" id="findTopMatchWrapper" style="display: none;">
+            <div class="top-match-badge-head">
+              <span class="top-match-pill">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Top Match
+              </span>
+            </div>
+            <div class="top-match-current-card">
+              <div class="top-match-card-content">
+                <div class="top-match-thumb-box" id="topMatchThumbBox" style="display:none;">
+                  <img src="" alt="Item" id="topMatchThumb" class="top-match-thumb-img">
+                </div>
+                <div class="top-match-details">
+                  <div class="top-match-label-row">
+                    <span class="top-match-item-label">Located</span>
+                    <span class="top-match-date" id="topMatchDate">Today</span>
+                  </div>
+                  <div class="top-match-title" id="topMatchName">Item Name</div>
+                  <div class="top-match-path" id="topMatchPath">Location Path</div>
+                </div>
+              </div>
+              <div class="top-match-actions">
+                <button type="button" class="btn-card-find" id="btnTopMatchFind" title="Show location">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span>Locate</span>
+                </button>
+                <button type="button" class="btn-card-delete" id="btnTopMatchDelete" title="Delete item">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Count Header -->
+          <div class="find-results-header" id="findResultsHeader" style="display: none;">
+            <span class="find-results-count" id="findResultsCount">All Stored Items (0)</span>
+          </div>
+
+          <!-- Results Grid -->
+          <div class="find-results-grid" id="findResultsGrid" style="display: none;"></div>
+
+          <!-- Empty State (When search yields no match) -->
+          <div class="find-empty-state" id="findEmptyState" style="display: none;">
+            <div class="empty-state-icon">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+            <h3 class="empty-state-title">No item found</h3>
+            <p class="empty-state-desc">We couldn't find an item with that name. Would you like to store it now?</p>
+            <button type="button" class="btn-empty-add-item" id="btnEmptyAdd">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>+ Add Item</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       STORED ITEMS MODAL (Directly Connected to SQLite Database)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="storedItemsModal" role="dialog" aria-modal="true" aria-labelledby="storedItemsTitle">
+    <div class="modal-card">
+      <div class="modal-card-header">
+        <div class="modal-title-wrap">
+          <div class="modal-title-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M7 8h10" />
+              <path d="M7 12h10" />
+              <path d="M7 16h6" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-card-title" id="storedItemsTitle">My Stored Belongings</h3>
+            <p class="modal-card-sub" id="storedItemsSub">Real-time items saved in your home database</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseItemsModal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-card-search">
+        <input type="text" id="modalFilterInput" class="modal-filter-input" placeholder="Filter items by name, room, or location..." autocomplete="off">
+      </div>
+
+      <div class="stored-items-scroll-list" id="storedItemsList">
+        <!-- Rendered dynamically from SQLite -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       LOGIN & REGISTER MODAL (Tabs for Sign In and Register with SQLite Backend)
+       ========================================================================== -->
+  <div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-card-header">
+        <div class="modal-title-wrap">
+          <div class="modal-title-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-card-title" id="loginModalTitle">Account & Sync</h3>
+            <p class="modal-card-sub" id="loginModalSub">Sign in or create your personal account</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseLoginModal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <!-- Auth Switch Tabs: Sign In / Create Account -->
+      <div class="auth-tabs-row">
+        <button type="button" class="auth-tab-btn active" id="tabSignIn">Sign In</button>
+        <button type="button" class="auth-tab-btn" id="tabRegister">Create Account</button>
+      </div>
+
+      <!-- Feedback / Alert Banner -->
+      <div class="auth-feedback-box" id="authFeedbackBox" style="display: none;"></div>
+
+      <div class="modal-form-body">
+        <!-- 1. SIGN IN FORM -->
+        <form id="formSignIn" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Username or Email</label>
+            <input type="text" id="loginEmail" class="form-input" placeholder="e.g. alex or alex@smartspace.io" value="alex" autocomplete="username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" value="password123" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="btn-primary-block" id="btnSubmitLogin">Sign In</button>
+        </form>
+
+        <!-- 2. REGISTER FORM -->
+        <form id="formRegister" onsubmit="return false;" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="regUsername">Username</label>
+            <input type="text" id="regUsername" class="form-input" placeholder="Choose a username (e.g. sarah)" autocomplete="username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Email Address</label>
+            <input type="email" id="regEmail" class="form-input" placeholder="sarah@example.com" autocomplete="email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password</label>
+            <input type="password" id="regPassword" class="form-input" placeholder="At least 4 characters" autocomplete="new-password" required>
+          </div>
+          <button type="submit" class="btn-primary-block" id="btnSubmitRegister">Create Account</button>
+        </form>
+
+        <p class="form-switch-note" id="formSwitchNote">
+          Demo accounts available: <strong>alex</strong> / <strong>demo</strong> (password: <strong>password123</strong>)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Frontend JavaScript -->
+  <script src="/app.js"></script>
+</body>
+
+</html>
